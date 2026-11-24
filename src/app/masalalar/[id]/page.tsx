@@ -183,9 +183,11 @@ int main() {
       if (data.submission) {
         setSubmitVerdict(data.submission);
         if (data.rewards) {
-          setSubmitRewards(data.rewards);
-        }
-        refreshSubmissions();
+        setSubmitRewards(data.rewards);
+        window.dispatchEvent(new Event("couponsUpdated"));
+        router.refresh();
+      }
+      refreshSubmissions();
       } else {
         setSubmitVerdict({
           status: "Error",

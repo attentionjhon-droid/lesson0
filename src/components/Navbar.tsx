@@ -59,6 +59,8 @@ export default function Navbar() {
     setDropdownOpen(false);
     setMobileMenuOpen(false);
     fetchUser();
+    window.addEventListener("couponsUpdated", fetchUser);
+    return () => window.removeEventListener("couponsUpdated", fetchUser);
   }, [pathname]);
 
   useEffect(() => {
