@@ -1,0 +1,485 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState, useRef } from "react";
+import {
+  Code2,
+  LogIn,
+  LogOut,
+  UserPlus,
+  BookOpen,
+  ShieldCheck,
+  MessageSquare,
+  Terminal,
+  ShoppingBag,
+  User,
+  ChevronDown,
+  Menu,
+  X,
+  Sparkles,
+} from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { STORE_ITEMS } from "@/lib/storeItems";
+
+interface CurrentUser {
+  id: string;
+  username: string;
+  name?: string | null;
+  role: string;
+  coupons?: number;
+  activeNameAnim?: string | null;
+  activeAvatarFrame?: string | null;
+  activeTitle?: string | null;
+}
+
+export default function Navbar() {
+  const [user, setUser] = useState<CurrentUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const fetchUser = () => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    setDropdownOpen(false);
+    setMobileMenuOpen(false);
+    fetchUser();
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const getUserInitials = (u: CurrentUser) => {
+    if (u.name) {
+      const parts = u.name.trim().split(" ");
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    return u.username.slice(0, 2).toUpperCase();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setUser(null);
+      router.push("/login");
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Find cosmetics
+  const activeNameItem = user?.activeNameAnim
+    ? STORE_ITEMS.find((i) => i.id === user.activeNameAnim)
+    : null;
+  const activeFrameItem = user?.activeAvatarFrame
+    ? STORE_ITEMS.find((i) => i.id === user.activeAvatarFrame)
+    : null;
+  const activeTitleItem = user?.activeTitle
+    ? STORE_ITEMS.find((i) => i.id === user.activeTitle)
+    : null;
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur-md">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+        {/* Left: Brand Logo */}
+        <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-500 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition">
+            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <Code2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+              NDTU Coding
+            </span>
+            <span className="text-[10px] text-slate-400 -mt-0.5 font-mono hidden xs:inline">
+              C++ Online Judge
+            </span>
+          </div>
+        </Link>
+
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-1 sm:gap-1.5">
+          <Link
+            href="/masalalar"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+              pathname.startsWith("/masalalar")
+                ? "bg-slate-800 text-emerald-400 border border-slate-700"
+                : "text-slate-300 hover:text-white hover:bg-slate-900"
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>Masalalar</span>
+          </Link>
+
+          <Link
+            href="/compiler"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+              pathname === "/compiler"
+                ? "bg-slate-800 text-emerald-400 border border-slate-700"
+                : "text-slate-300 hover:text-white hover:bg-slate-900"
+            }`}
+          >
+            <Terminal className="w-4 h-4" />
+            <span>Kompilyator</span>
+          </Link>
+
+          <Link
+            href="/store"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+              pathname === "/store"
+                ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                : "text-slate-300 hover:text-amber-300 hover:bg-slate-900"
+            }`}
+          >
+            <ShoppingBag className="w-4 h-4 text-amber-400" />
+            <span>Do&apos;kon</span>
+          </Link>
+
+          <Link
+            href="/feedback"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+              pathname === "/feedback"
+                ? "bg-slate-800 text-emerald-400 border border-slate-700"
+                : "text-slate-300 hover:text-white hover:bg-slate-900"
+            }`}
+          >
+            <MessageSquare className="w-4 h-4" />
+            <span>Takliflar</span>
+          </Link>
+
+          {user?.role === "ADMIN" && (
+            <Link
+              href="/admin"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition ${
+                pathname === "/admin"
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                  : "text-purple-400 hover:text-purple-300 hover:bg-purple-500/10"
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 text-purple-400" />
+              <span>Admin Panel</span>
+            </Link>
+          )}
+        </nav>
+
+        {/* Right: Auth & Controls */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          {loading ? (
+            <div className="w-16 h-8 bg-slate-800/50 rounded-lg animate-pulse" />
+          ) : user ? (
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Coupons Badge (Always Visible on Mobile & Desktop) */}
+              <Link
+                href="/store"
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 hover:border-emerald-500/50 shadow-sm shadow-emerald-500/10 transition shrink-0"
+                title="Sizning kuponlaringiz (Do'konga o'tish)"
+              >
+                <span className="text-sm sm:text-base select-none leading-none">💵</span>
+                <span className="font-mono font-bold text-xs sm:text-sm text-emerald-400">
+                  {user.coupons ?? 0}
+                </span>
+              </Link>
+
+              {/* User Avatar Pill */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl transition cursor-pointer border ${
+                    pathname === "/profile" || dropdownOpen
+                      ? "bg-slate-900 border-emerald-500/50 shadow-md shadow-emerald-500/10"
+                      : "bg-slate-900/90 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                  }`}
+                  title="Shaxsiy kabinet / Profil"
+                >
+                  {/* Circular Avatar with Active Cosmetic Frame */}
+                  <div className={`relative ${activeFrameItem ? activeFrameItem.cssClass : ""}`}>
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold shadow-sm ${
+                        user.role === "ADMIN"
+                          ? "bg-gradient-to-tr from-purple-600 via-indigo-500 to-pink-500 text-white shadow-purple-500/30"
+                          : "bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-500 text-slate-950 shadow-emerald-500/30"
+                      }`}
+                    >
+                      {getUserInitials(user)}
+                    </div>
+                  </div>
+
+                  {/* Name with Active Name Animation */}
+                  <span
+                    className={`text-xs sm:text-sm font-semibold max-w-[80px] sm:max-w-[120px] truncate hidden xs:inline ${
+                      activeNameItem ? activeNameItem.cssClass : "text-slate-200"
+                    }`}
+                  >
+                    {user.name || user.username}
+                  </span>
+
+                  {/* Active Title Badge */}
+                  {activeTitleItem && (
+                    <span className={`hidden md:inline ${activeTitleItem.cssClass}`}>
+                      {activeTitleItem.emoji}
+                    </span>
+                  )}
+
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                      dropdownOpen ? "rotate-180 text-emerald-400" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-slate-900/98 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
+                    {/* User Header in Dropdown */}
+                    <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-center gap-3 mb-1.5">
+                      <div className={`relative ${activeFrameItem ? activeFrameItem.cssClass : ""}`}>
+                        <div
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-extrabold shadow-md ${
+                            user.role === "ADMIN"
+                              ? "bg-gradient-to-tr from-purple-600 via-indigo-500 to-pink-500 text-white"
+                              : "bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-500 text-slate-950"
+                          }`}
+                        >
+                          {getUserInitials(user)}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div
+                          className={`font-bold text-sm truncate ${
+                            activeNameItem ? activeNameItem.cssClass : "text-white"
+                          }`}
+                        >
+                          {user.name || user.username}
+                        </div>
+                        <div className="text-xs text-slate-400 font-mono truncate">
+                          @{user.username}
+                        </div>
+                        {activeTitleItem && (
+                          <div className="mt-1">
+                            <span className={activeTitleItem.cssClass}>
+                              {activeTitleItem.emoji} {activeTitleItem.name}
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <span
+                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                              user.role === "ADMIN"
+                                ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                                : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                            }`}
+                          >
+                            {user.role === "ADMIN" ? "ADMIN" : "TALABA"}
+                          </span>
+                          <span className="text-[11px] font-mono text-emerald-400 font-bold">
+                            💵 {user.coupons ?? 0}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Links */}
+                    <div className="space-y-1">
+                      <Link
+                        href="/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                          pathname === "/profile"
+                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            : "text-slate-200 hover:bg-slate-800 hover:text-white"
+                        }`}
+                      >
+                        <User className="w-4 h-4 text-emerald-400" />
+                        <span>Mening profilim</span>
+                      </Link>
+
+                      <Link
+                        href="/store"
+                        onClick={() => setDropdownOpen(false)}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                          pathname === "/store"
+                            ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                            : "text-slate-200 hover:bg-slate-800 hover:text-white"
+                        }`}
+                      >
+                        <ShoppingBag className="w-4 h-4 text-amber-400" />
+                        <span>Do&apos;kon (Kuponlar)</span>
+                      </Link>
+
+                      {user.role === "ADMIN" && (
+                        <Link
+                          href="/admin"
+                          onClick={() => setDropdownOpen(false)}
+                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                            pathname === "/admin"
+                              ? "bg-purple-500/15 text-purple-300 border border-purple-500/25"
+                              : "text-purple-300 hover:bg-purple-500/10"
+                          }`}
+                        >
+                          <ShieldCheck className="w-4 h-4 text-purple-400" />
+                          <span>Admin Panel</span>
+                        </Link>
+                      )}
+
+                      <div className="h-[1px] bg-slate-800/80 my-1" />
+
+                      <button
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          handleLogout();
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition cursor-pointer"
+                      >
+                        <LogOut className="w-4 h-4 text-rose-400" />
+                        <span>Chiqish</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Link
+                href="/login"
+                className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Kirish</span>
+              </Link>
+              <Link
+                href="/register"
+                className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-950 bg-emerald-400 hover:bg-emerald-300 shadow-md shadow-emerald-500/20 transition"
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Ro&apos;yxatdan o&apos;tish</span>
+                <span className="sm:hidden">Qo&apos;shilish</span>
+              </Link>
+            </div>
+          )}
+
+          {/* Mobile Hamburger Menu Toggle Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition"
+            aria-label="Menyu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5 text-emerald-400" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Collapsible Navigation Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-t border-slate-800 bg-slate-950/98 px-4 py-3 space-y-1.5 animate-in slide-in-from-top-2 shadow-2xl">
+          <Link
+            href="/masalalar"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
+              pathname.startsWith("/masalalar")
+                ? "bg-slate-800 text-emerald-400 border border-slate-700"
+                : "text-slate-300 hover:bg-slate-900 hover:text-white"
+            }`}
+          >
+            <BookOpen className="w-4 h-4 text-emerald-400" />
+            <span>Masalalar</span>
+          </Link>
+
+          <Link
+            href="/compiler"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
+              pathname === "/compiler"
+                ? "bg-slate-800 text-emerald-400 border border-slate-700"
+                : "text-slate-300 hover:bg-slate-900 hover:text-white"
+            }`}
+          >
+            <Terminal className="w-4 h-4 text-emerald-400" />
+            <span>Kompilyator</span>
+          </Link>
+
+          <Link
+            href="/store"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
+              pathname === "/store"
+                ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                : "text-slate-300 hover:bg-slate-900 hover:text-amber-300"
+            }`}
+          >
+            <ShoppingBag className="w-4 h-4 text-amber-400" />
+            <span>Do&apos;kon (Kuponlar 💵)</span>
+          </Link>
+
+          <Link
+            href="/feedback"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
+              pathname === "/feedback"
+                ? "bg-slate-800 text-emerald-400 border border-slate-700"
+                : "text-slate-300 hover:bg-slate-900 hover:text-white"
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-teal-400" />
+            <span>Takliflar</span>
+          </Link>
+
+          {user && (
+            <Link
+              href="/profile"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
+                pathname === "/profile"
+                  ? "bg-slate-800 text-emerald-400 border border-slate-700"
+                  : "text-slate-300 hover:bg-slate-900 hover:text-white"
+              }`}
+            >
+              <User className="w-4 h-4 text-emerald-400" />
+              <span>Mening profilim</span>
+            </Link>
+          )}
+
+          {user?.role === "ADMIN" && (
+            <Link
+              href="/admin"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
+                pathname === "/admin"
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                  : "text-purple-400 hover:bg-purple-500/10 hover:text-purple-300"
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 text-purple-400" />
+              <span>Admin Panel</span>
+            </Link>
+          )}
+        </div>
+      )}
+    </header>
+  );
+}

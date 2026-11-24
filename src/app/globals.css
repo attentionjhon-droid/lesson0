@@ -1,0 +1,244 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    background-color: #020617;
+    color: #f8fafc;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    min-height: 100%;
+  }
+}
+
+/* ==========================================
+   STORE COSMETICS — Name Animations
+   ========================================== */
+
+/* Neon Pulse: blue-green flickering glow */
+@keyframes neon-pulse-anim {
+  0%, 100% {
+    text-shadow:
+      0 0 4px #00ffcc,
+      0 0 10px #00ffcc,
+      0 0 20px #00b3ff,
+      0 0 30px #00b3ff;
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 2px #00ffcc,
+      0 0 6px #00ffcc,
+      0 0 12px #00b3ff;
+    opacity: 0.85;
+  }
+}
+.anim-neon-pulse {
+  animation: neon-pulse-anim 1.6s ease-in-out infinite;
+  color: #00ffcc;
+}
+
+/* Golden Shine: flowing gold gradient shimmer */
+@keyframes golden-shine-anim {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.anim-golden-shine {
+  background: linear-gradient(
+    90deg,
+    #c8960c 0%,
+    #ffd700 20%,
+    #fff8b0 40%,
+    #ffd700 60%,
+    #c8960c 80%,
+    #ffd700 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: golden-shine-anim 2.5s linear infinite;
+}
+
+/* Cyberpunk Glitch: color-channel shifting effect */
+@keyframes glitch-shift {
+  0%, 100% { clip-path: inset(0 0 95% 0); transform: translate(-3px, 0); color: #ff003c; }
+  10%       { clip-path: inset(10% 0 85% 0); transform: translate(3px, 0); color: #00f3ff; }
+  20%       { clip-path: inset(0 0 0 0); transform: translate(0, 0); color: #e040fb; }
+  30%       { clip-path: inset(60% 0 20% 0); transform: translate(-2px, 1px); color: #ff003c; }
+  40%       { clip-path: inset(0 0 0 0); transform: translate(0, 0); color: #e040fb; }
+  60%       { clip-path: inset(80% 0 5% 0); transform: translate(2px, 0); color: #00f3ff; }
+  70%       { clip-path: inset(0 0 0 0); transform: translate(0, 0); color: #ff003c; }
+  90%       { clip-path: inset(40% 0 50% 0); transform: translate(-1px, 2px); color: #00f3ff; }
+}
+.anim-cyberpunk-glitch {
+  position: relative;
+  color: #e040fb;
+  animation: glitch-shift 1.2s steps(1) infinite;
+}
+
+/* ==========================================
+   STORE COSMETICS — Avatar Frames
+   ========================================== */
+
+/* Emerald Glow: rotating emerald ring */
+@keyframes emerald-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.frame-emerald-glow {
+  position: relative;
+}
+.frame-emerald-glow::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 0deg,
+    #10b981, #34d399, #6ee7b7, #10b981
+  );
+  animation: emerald-spin 2s linear infinite;
+  z-index: -1;
+}
+.frame-emerald-glow::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 0deg,
+    #10b981, #34d399, #6ee7b7, #10b981
+  );
+  animation: emerald-spin 2s linear infinite;
+  filter: blur(5px);
+  opacity: 0.7;
+  z-index: -2;
+}
+
+/* Fire Ring: fiery orange-red rotating gradient */
+@keyframes fire-flicker {
+  0%   { background: conic-gradient(from 0deg, #ff4500, #ff8c00, #ffd700, #ff4500); }
+  25%  { background: conic-gradient(from 90deg, #ff4500, #ff8c00, #ffd700, #ff4500); }
+  50%  { background: conic-gradient(from 180deg, #ff4500, #ff8c00, #ffd700, #ff4500); }
+  75%  { background: conic-gradient(from 270deg, #ff4500, #ff8c00, #ffd700, #ff4500); }
+  100% { background: conic-gradient(from 360deg, #ff4500, #ff8c00, #ffd700, #ff4500); }
+}
+@keyframes fire-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.frame-fire-ring {
+  position: relative;
+}
+.frame-fire-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, #ff4500, #ff8c00, #ffd700, #ff6600, #ff4500);
+  animation: fire-spin 1.5s linear infinite;
+  z-index: -1;
+}
+.frame-fire-ring::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, #ff4500, #ff8c00, #ffd700, #ff6600, #ff4500);
+  animation: fire-spin 1.5s linear infinite;
+  filter: blur(6px);
+  opacity: 0.6;
+  z-index: -2;
+}
+
+/* Royal RGB: rainbow rotating border */
+@keyframes rgb-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.frame-royal-rgb {
+  position: relative;
+}
+.frame-royal-rgb::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: conic-gradient(
+    #ff0000, #ff7700, #ffff00,
+    #00ff00, #00ffff, #0000ff,
+    #8800ff, #ff0000
+  );
+  animation: rgb-spin 2s linear infinite;
+  z-index: -1;
+}
+.frame-royal-rgb::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: conic-gradient(
+    #ff0000, #ff7700, #ffff00,
+    #00ff00, #00ffff, #0000ff,
+    #8800ff, #ff0000
+  );
+  animation: rgb-spin 2s linear infinite;
+  filter: blur(7px);
+  opacity: 0.65;
+  z-index: -2;
+}
+
+/* ==========================================
+   STORE COSMETICS — Title Badges
+   ========================================== */
+.title-junior {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #064e3b, #065f46);
+  color: #34d399;
+  border: 1px solid #059669;
+  letter-spacing: 0.03em;
+}
+
+.title-algo {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  color: #a5b4fc;
+  border: 1px solid #6366f1;
+  letter-spacing: 0.03em;
+}
+
+@keyframes legend-pulse {
+  0%, 100% { box-shadow: 0 0 6px 1px #f59e0b80; }
+  50%       { box-shadow: 0 0 12px 3px #f59e0bcc; }
+}
+.title-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #78350f, #92400e);
+  color: #fcd34d;
+  border: 1px solid #f59e0b;
+  letter-spacing: 0.03em;
+  animation: legend-pulse 1.8s ease-in-out infinite;
+}
