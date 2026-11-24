@@ -244,7 +244,27 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
+{/* Platforma yaratuvchisi haqida */}
+<section className="max-w-5xl mx-auto px-4 py-12">
+  <div className="rounded-2xl border border-emerald-500/20 bg-slate-900/60 p-6 md:p-8 backdrop-blur-sm">
+    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="space-y-2">
+        <span className="inline-block text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">
+          Platforma yaratuvchisi
+        </span>
+        <h3 className="text-2xl font-bold text-white">
+          Jumabayev Ozodbek
+        </h3>
+        <p className="text-sm text-emerald-300/90 font-medium">
+          Nukus davlat texnika universiteti • Sun&apos;iy intellekt fakulteti • 104-26 Dasturiy injiniring (1-kurs)
+        </p>
+        <p className="text-slate-400 text-sm max-w-2xl leading-relaxed pt-1">
+          Ushbu platforma talabalarga C++ dasturlash tilini amaliy masalalar, tezkor onlayn kompilyator va rag&apos;batlantiruvchi kuponlar tizimi orqali oson hamda qiziqarli o&apos;rganishga yordam berish maqsadida yaratilgan.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
       <Footer />
     </div>
   );
