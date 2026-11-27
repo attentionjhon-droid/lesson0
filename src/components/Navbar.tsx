@@ -14,12 +14,10 @@ import {
   ShoppingBag,
   User,
   ChevronDown,
-  Menu,
-  X,
-  Sparkles,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { STORE_ITEMS } from "@/lib/storeItems";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface CurrentUser {
   id: string;
@@ -36,7 +34,6 @@ export default function Navbar() {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -57,10 +54,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setDropdownOpen(false);
-    setMobileMenuOpen(false);
     fetchUser();
-    window.addEventListener("couponsUpdated", fetchUser);
-    return () => window.removeEventListener("couponsUpdated", fetchUser);
   }, [pathname]);
 
   useEffect(() => {
@@ -105,33 +99,33 @@ export default function Navbar() {
     : null;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b backdrop-blur-2xl transition-colors duration-300 bg-white/70 dark:bg-slate-950/85 border-slate-200/80 dark:border-slate-800/80 shadow-sm dark:shadow-none">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
         {/* Left: Brand Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-500 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <Code2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-500 p-0.5 shadow-md shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition">
+            <div className="w-full h-full bg-white dark:bg-slate-950 rounded-[14px] flex items-center justify-center">
+              <Code2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+            <span className="font-bold text-sm sm:text-base lg:text-lg tracking-tight bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400 bg-clip-text text-transparent">
               NDTU Coding
             </span>
-            <span className="text-[10px] text-slate-400 -mt-0.5 font-mono hidden xs:inline">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 -mt-0.5 font-mono hidden xs:inline">
               C++ Online Judge
             </span>
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 sm:gap-1.5">
+        {/* Desktop Navigation Links (Hidden on Mobile) */}
+        <nav className="hidden md:flex items-center gap-1 sm:gap-1.5">
           <Link
             href="/masalalar"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-semibold transition ${
               pathname.startsWith("/masalalar")
-                ? "bg-slate-800 text-emerald-400 border border-slate-700"
-                : "text-slate-300 hover:text-white hover:bg-slate-900"
+                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60"
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -140,10 +134,10 @@ export default function Navbar() {
 
           <Link
             href="/compiler"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-semibold transition ${
               pathname === "/compiler"
-                ? "bg-slate-800 text-emerald-400 border border-slate-700"
-                : "text-slate-300 hover:text-white hover:bg-slate-900"
+                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60"
             }`}
           >
             <Terminal className="w-4 h-4" />
@@ -152,22 +146,22 @@ export default function Navbar() {
 
           <Link
             href="/store"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-semibold transition ${
               pathname === "/store"
-                ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
-                : "text-slate-300 hover:text-amber-300 hover:bg-slate-900"
+                ? "bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30"
+                : "text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-300 hover:bg-amber-500/5"
             }`}
           >
-            <ShoppingBag className="w-4 h-4 text-amber-400" />
+            <ShoppingBag className="w-4 h-4 text-amber-500" />
             <span>Do&apos;kon</span>
           </Link>
 
           <Link
             href="/feedback"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-semibold transition ${
               pathname === "/feedback"
-                ? "bg-slate-800 text-emerald-400 border border-slate-700"
-                : "text-slate-300 hover:text-white hover:bg-slate-900"
+                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60"
             }`}
           >
             <MessageSquare className="w-4 h-4" />
@@ -177,32 +171,35 @@ export default function Navbar() {
           {user?.role === "ADMIN" && (
             <Link
               href="/admin"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-bold transition ${
                 pathname === "/admin"
-                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                  : "text-purple-400 hover:text-purple-300 hover:bg-purple-500/10"
+                  ? "bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30"
+                  : "text-purple-600 dark:text-purple-400 hover:bg-purple-500/10"
               }`}
             >
-              <ShieldCheck className="w-4 h-4 text-purple-400" />
+              <ShieldCheck className="w-4 h-4 text-purple-500" />
               <span>Admin Panel</span>
             </Link>
           )}
         </nav>
 
-        {/* Right: Auth & Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5">
+        {/* Right Section: Theme Toggle + Auth / Profile */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Day / Night Theme Toggle */}
+          <ThemeToggle />
+
           {loading ? (
-            <div className="w-16 h-8 bg-slate-800/50 rounded-lg animate-pulse" />
+            <div className="w-16 h-8 bg-slate-200 dark:bg-slate-800/50 rounded-2xl animate-pulse" />
           ) : user ? (
             <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Coupons Badge (Always Visible on Mobile & Desktop) */}
               <Link
                 href="/store"
-                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/15 to-teal-500/15 border border-emerald-500/30 hover:border-emerald-500/50 shadow-sm shadow-emerald-500/10 transition shrink-0"
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-2xl border transition shrink-0 bg-emerald-500/10 dark:bg-emerald-500/15 border-emerald-500/30 hover:border-emerald-500/50 shadow-sm"
                 title="Sizning kuponlaringiz (Do'konga o'tish)"
               >
                 <span className="text-sm sm:text-base select-none leading-none">💵</span>
-                <span className="font-mono font-bold text-xs sm:text-sm text-emerald-400">
+                <span className="font-mono font-bold text-xs sm:text-sm text-emerald-600 dark:text-emerald-400">
                   {user.coupons ?? 0}
                 </span>
               </Link>
@@ -211,10 +208,10 @@ export default function Navbar() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl transition cursor-pointer border ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-2xl transition cursor-pointer border ${
                     pathname === "/profile" || dropdownOpen
-                      ? "bg-slate-900 border-emerald-500/50 shadow-md shadow-emerald-500/10"
-                      : "bg-slate-900/90 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
+                      ? "bg-slate-100 dark:bg-slate-900 border-emerald-500/50 shadow-md"
+                      : "bg-white/80 dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
                   }`}
                   title="Shaxsiy kabinet / Profil"
                 >
@@ -234,7 +231,9 @@ export default function Navbar() {
                   {/* Name with Active Name Animation */}
                   <span
                     className={`text-xs sm:text-sm font-semibold max-w-[80px] sm:max-w-[120px] truncate hidden xs:inline ${
-                      activeNameItem ? activeNameItem.cssClass : "text-slate-200"
+                      activeNameItem
+                        ? activeNameItem.cssClass
+                        : "text-slate-800 dark:text-slate-200"
                     }`}
                   >
                     {user.name || user.username}
@@ -249,19 +248,19 @@ export default function Navbar() {
 
                   <ChevronDown
                     className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
-                      dropdownOpen ? "rotate-180 text-emerald-400" : ""
+                      dropdownOpen ? "rotate-180 text-emerald-500" : ""
                     }`}
                   />
                 </button>
 
                 {/* Dropdown Menu */}
                 {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-slate-900/98 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="absolute right-0 top-full mt-2 w-64 rounded-3xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 border backdrop-blur-2xl bg-white/95 dark:bg-slate-900/98 border-slate-200 dark:border-slate-800">
                     {/* User Header in Dropdown */}
-                    <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-center gap-3 mb-1.5">
+                    <div className="p-3 rounded-2xl border flex items-center gap-3 mb-1.5 bg-slate-50 dark:bg-slate-950/80 border-slate-200/80 dark:border-slate-800/80">
                       <div className={`relative ${activeFrameItem ? activeFrameItem.cssClass : ""}`}>
                         <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-extrabold shadow-md ${
+                          className={`w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-extrabold shadow-md ${
                             user.role === "ADMIN"
                               ? "bg-gradient-to-tr from-purple-600 via-indigo-500 to-pink-500 text-white"
                               : "bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-500 text-slate-950"
@@ -273,12 +272,14 @@ export default function Navbar() {
                       <div className="flex-1 min-w-0">
                         <div
                           className={`font-bold text-sm truncate ${
-                            activeNameItem ? activeNameItem.cssClass : "text-white"
+                            activeNameItem
+                              ? activeNameItem.cssClass
+                              : "text-slate-900 dark:text-white"
                           }`}
                         >
                           {user.name || user.username}
                         </div>
-                        <div className="text-xs text-slate-400 font-mono truncate">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 font-mono truncate">
                           @{user.username}
                         </div>
                         {activeTitleItem && (
@@ -290,15 +291,15 @@ export default function Navbar() {
                         )}
                         <div className="flex items-center gap-2 mt-1.5">
                           <span
-                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full ${
                               user.role === "ADMIN"
-                                ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                                : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                ? "bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30"
+                                : "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30"
                             }`}
                           >
                             {user.role === "ADMIN" ? "ADMIN" : "TALABA"}
                           </span>
-                          <span className="text-[11px] font-mono text-emerald-400 font-bold">
+                          <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
                             💵 {user.coupons ?? 0}
                           </span>
                         </div>
@@ -310,54 +311,67 @@ export default function Navbar() {
                       <Link
                         href="/profile"
                         onClick={() => setDropdownOpen(false)}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-2xl text-xs font-semibold transition ${
                           pathname === "/profile"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                            : "text-slate-200 hover:bg-slate-800 hover:text-white"
+                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+                            : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
                         }`}
                       >
-                        <User className="w-4 h-4 text-emerald-400" />
+                        <User className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         <span>Mening profilim</span>
                       </Link>
 
                       <Link
                         href="/store"
                         onClick={() => setDropdownOpen(false)}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-2xl text-xs font-semibold transition ${
                           pathname === "/store"
-                            ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                            : "text-slate-200 hover:bg-slate-800 hover:text-white"
+                            ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20"
+                            : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
                         }`}
                       >
-                        <ShoppingBag className="w-4 h-4 text-amber-400" />
+                        <ShoppingBag className="w-4 h-4 text-amber-500" />
                         <span>Do&apos;kon (Kuponlar)</span>
+                      </Link>
+
+                      <Link
+                        href="/feedback"
+                        onClick={() => setDropdownOpen(false)}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-2xl text-xs font-semibold transition ${
+                          pathname === "/feedback"
+                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+                            : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        }`}
+                      >
+                        <MessageSquare className="w-4 h-4 text-teal-500" />
+                        <span>Takliflar va Sharhlar</span>
                       </Link>
 
                       {user.role === "ADMIN" && (
                         <Link
                           href="/admin"
                           onClick={() => setDropdownOpen(false)}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                          className={`flex items-center gap-2.5 px-3 py-2 rounded-2xl text-xs font-semibold transition ${
                             pathname === "/admin"
-                              ? "bg-purple-500/15 text-purple-300 border border-purple-500/25"
-                              : "text-purple-300 hover:bg-purple-500/10"
+                              ? "bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/25"
+                              : "text-purple-600 dark:text-purple-300 hover:bg-purple-500/10"
                           }`}
                         >
-                          <ShieldCheck className="w-4 h-4 text-purple-400" />
+                          <ShieldCheck className="w-4 h-4 text-purple-500" />
                           <span>Admin Panel</span>
                         </Link>
                       )}
 
-                      <div className="h-[1px] bg-slate-800/80 my-1" />
+                      <div className="h-[1px] bg-slate-200 dark:bg-slate-800/80 my-1" />
 
                       <button
                         onClick={() => {
                           setDropdownOpen(false);
                           handleLogout();
                         }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition cursor-pointer"
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-2xl text-xs font-semibold text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
                       >
-                        <LogOut className="w-4 h-4 text-rose-400" />
+                        <LogOut className="w-4 h-4 text-rose-500" />
                         <span>Chiqish</span>
                       </button>
                     </div>
@@ -369,14 +383,14 @@ export default function Navbar() {
             <div className="flex items-center gap-1.5 sm:gap-2">
               <Link
                 href="/login"
-                className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-semibold transition border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>Kirish</span>
               </Link>
               <Link
                 href="/register"
-                className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-950 bg-emerald-400 hover:bg-emerald-300 shadow-md shadow-emerald-500/20 transition"
+                className="flex items-center gap-1 px-3.5 py-1.5 rounded-2xl text-xs sm:text-sm font-bold text-white dark:text-slate-950 bg-emerald-600 dark:bg-emerald-400 hover:bg-emerald-500 dark:hover:bg-emerald-300 shadow-md shadow-emerald-500/20 transition"
               >
                 <UserPlus className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Ro&apos;yxatdan o&apos;tish</span>
@@ -384,104 +398,8 @@ export default function Navbar() {
               </Link>
             </div>
           )}
-
-          {/* Mobile Hamburger Menu Toggle Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition"
-            aria-label="Menyu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-emerald-400" /> : <Menu className="w-5 h-5" />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile Collapsible Navigation Menu Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-800 bg-slate-950/98 px-4 py-3 space-y-1.5 animate-in slide-in-from-top-2 shadow-2xl">
-          <Link
-            href="/masalalar"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
-              pathname.startsWith("/masalalar")
-                ? "bg-slate-800 text-emerald-400 border border-slate-700"
-                : "text-slate-300 hover:bg-slate-900 hover:text-white"
-            }`}
-          >
-            <BookOpen className="w-4 h-4 text-emerald-400" />
-            <span>Masalalar</span>
-          </Link>
-
-          <Link
-            href="/compiler"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
-              pathname === "/compiler"
-                ? "bg-slate-800 text-emerald-400 border border-slate-700"
-                : "text-slate-300 hover:bg-slate-900 hover:text-white"
-            }`}
-          >
-            <Terminal className="w-4 h-4 text-emerald-400" />
-            <span>Kompilyator</span>
-          </Link>
-
-          <Link
-            href="/store"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
-              pathname === "/store"
-                ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                : "text-slate-300 hover:bg-slate-900 hover:text-amber-300"
-            }`}
-          >
-            <ShoppingBag className="w-4 h-4 text-amber-400" />
-            <span>Do&apos;kon (Kuponlar 💵)</span>
-          </Link>
-
-          <Link
-            href="/feedback"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
-              pathname === "/feedback"
-                ? "bg-slate-800 text-emerald-400 border border-slate-700"
-                : "text-slate-300 hover:bg-slate-900 hover:text-white"
-            }`}
-          >
-            <MessageSquare className="w-4 h-4 text-teal-400" />
-            <span>Takliflar</span>
-          </Link>
-
-          {user && (
-            <Link
-              href="/profile"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
-                pathname === "/profile"
-                  ? "bg-slate-800 text-emerald-400 border border-slate-700"
-                  : "text-slate-300 hover:bg-slate-900 hover:text-white"
-              }`}
-            >
-              <User className="w-4 h-4 text-emerald-400" />
-              <span>Mening profilim</span>
-            </Link>
-          )}
-
-          {user?.role === "ADMIN" && (
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold transition ${
-                pathname === "/admin"
-                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                  : "text-purple-400 hover:bg-purple-500/10 hover:text-purple-300"
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4 text-purple-400" />
-              <span>Admin Panel</span>
-            </Link>
-          )}
-        </div>
-      )}
     </header>
   );
 }

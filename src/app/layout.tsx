@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AdminDeviceSimulator from "@/components/AdminDeviceSimulator";
+import MobileBottomDock from "@/components/MobileBottomDock";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 export const metadata: Metadata = {
   title: "NDTU Coding Platform - C++ Dasturlash Masalalari",
@@ -13,10 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="uz" className="dark h-full">
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white">
-        {children}
-        <AdminDeviceSimulator />
+    <html lang="uz" className="dark h-full" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white pb-16 md:pb-0">
+        <ThemeProvider>
+          {children}
+          <MobileBottomDock />
+          <AdminDeviceSimulator />
+        </ThemeProvider>
       </body>
     </html>
   );

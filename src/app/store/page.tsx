@@ -141,12 +141,12 @@ export default function StorePage() {
   const filteredItems = STORE_ITEMS.filter(i => tab === "all" || i.category === tab);
 
   if (loading) return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors">
       <Navbar />
       <div className="flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-4 border-emerald-500/30 border-t-emerald-500 animate-spin" />
-          <span className="text-slate-400 text-sm">Do'kon yuklanmoqda…</span>
+          <span className="text-slate-500 dark:text-slate-400 text-sm">Do&apos;kon yuklanmoqda…</span>
         </div>
       </div>
       <Footer />
@@ -161,35 +161,35 @@ export default function StorePage() {
   const anyEquipped = Object.values(activeEquips).some(Boolean);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col text-slate-800 dark:text-slate-100 transition-colors">
       <Navbar />
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden border-b border-slate-800/60 bg-gradient-to-b from-slate-900 to-slate-950">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#10b98130_0%,_transparent_60%)]" />
+      <section className="relative overflow-hidden border-b border-slate-200 dark:border-slate-800/60 bg-white/40 dark:bg-slate-900/40">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#10b98120_0%,_transparent_60%)]" />
         <div className="relative max-w-5xl mx-auto px-4 py-10 sm:py-14 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold mb-5">
-            <ShoppingBag className="w-3.5 h-3.5" /> NDTU Do'koni
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-600 dark:text-amber-400 text-xs font-semibold mb-5">
+            <ShoppingBag className="w-3.5 h-3.5" /> NDTU Do&apos;koni
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">
             Kuponlaringizni{" "}
-            <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">sarflang</span>
+            <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">sarflang</span>
           </h1>
-          <p className="text-slate-400 text-sm max-w-xl mx-auto mb-6">
-            Masalalarni yechib yig'ilgan kuponlar bilan profilingizni bezatuvchi animatsiyalar, ramkalar va unvonlar sotib oling.
+          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xl mx-auto mb-6">
+            Masalalarni yechib yig&apos;ilgan kuponlar bilan profilingizni bezatuvchi animatsiyalar, ramkalar va unvonlar sotib oling.
           </p>
 
           {/* Balance card */}
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-slate-900 border border-slate-700 shadow-xl">
+          <div className="inline-flex items-center gap-4 px-6 py-3.5 rounded-3xl glass-bento shadow-xl">
             <div className="text-3xl">💵</div>
             <div className="text-left">
-              <div className="text-xs text-slate-400 font-medium">Joriy balans</div>
-              <div className="text-2xl font-extrabold text-emerald-400 font-mono">{data?.coupons ?? 0}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Joriy balans</div>
+              <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">{data?.coupons ?? 0}</div>
             </div>
-            <div className="h-8 w-px bg-slate-700" />
+            <div className="h-8 w-px bg-slate-200 dark:bg-slate-800" />
             <div className="text-left">
-              <div className="text-xs text-slate-400 font-medium">Sotib olingan</div>
-              <div className="text-2xl font-extrabold text-teal-400 font-mono">{data?.purchasedItems.length ?? 0}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Sotib olingan</div>
+              <div className="text-2xl font-extrabold text-teal-600 dark:text-teal-400 font-mono">{data?.purchasedItems.length ?? 0}</div>
             </div>
           </div>
         </div>
@@ -198,35 +198,35 @@ export default function StorePage() {
       {/* ── Active Cosmetics summary ── */}
       {anyEquipped && (
         <div className="max-w-5xl mx-auto w-full px-4 pt-6">
-          <div className="bg-slate-900/60 border border-emerald-500/20 rounded-2xl p-4 flex flex-wrap gap-3 items-center">
-            <span className="text-xs text-emerald-400 font-bold uppercase tracking-widest shrink-0">Faol kosmetika:</span>
+          <div className="glass-bento rounded-3xl p-4 flex flex-wrap gap-3 items-center">
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest shrink-0">Faol kosmetika:</span>
             {activeEquips.nameAnim && (
-              <div className="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
                 <span className={`text-sm font-bold ${activeEquips.nameAnim.cssClass}`}>{activeEquips.nameAnim.name}</span>
                 <button
                   onClick={() => doAction("unequip", undefined, "nameAnim")}
-                  className="text-slate-500 hover:text-rose-400 ml-1 text-xs cursor-pointer"
+                  className="text-slate-400 hover:text-rose-500 ml-1 text-xs cursor-pointer"
                 >✕</button>
               </div>
             )}
             {activeEquips.avatarFrame && (
-              <div className="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">
-                <User className="w-3.5 h-3.5 text-teal-400" />
-                <span className="text-sm font-semibold text-white">{activeEquips.avatarFrame.emoji} {activeEquips.avatarFrame.name}</span>
+              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <User className="w-3.5 h-3.5 text-teal-500 dark:text-teal-400" />
+                <span className="text-sm font-semibold text-slate-800 dark:text-white">{activeEquips.avatarFrame.emoji} {activeEquips.avatarFrame.name}</span>
                 <button
                   onClick={() => doAction("unequip", undefined, "avatarFrame")}
-                  className="text-slate-500 hover:text-rose-400 ml-1 text-xs cursor-pointer"
+                  className="text-slate-400 hover:text-rose-500 ml-1 text-xs cursor-pointer"
                 >✕</button>
               </div>
             )}
             {activeEquips.title && (
-              <div className="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">
-                <Crown className="w-3.5 h-3.5 text-amber-400" />
+              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <Crown className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                 <span className={activeEquips.title.cssClass}>{activeEquips.title.emoji} {activeEquips.title.name}</span>
                 <button
                   onClick={() => doAction("unequip", undefined, "title")}
-                  className="text-slate-500 hover:text-rose-400 ml-1 text-xs cursor-pointer"
+                  className="text-slate-400 hover:text-rose-500 ml-1 text-xs cursor-pointer"
                 >✕</button>
               </div>
             )}
@@ -237,15 +237,15 @@ export default function StorePage() {
       {/* ── Main Content ── */}
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
         {/* Tabs */}
-        <div className="flex gap-1.5 flex-wrap mb-8">
+        <div className="flex gap-2 flex-wrap mb-8">
           {TABS.map(t => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition cursor-pointer
+              className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition cursor-pointer
                 ${tab === t.key
-                  ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800 border border-transparent"
+                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white glass-pill"
                 }`}
             >
               {t.icon}

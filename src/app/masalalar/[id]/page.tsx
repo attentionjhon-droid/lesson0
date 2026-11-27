@@ -81,6 +81,9 @@ int main() {
 `;
   const [code, setCode] = useState(defaultTemplate);
 
+  // Mobile view pane switcher
+  const [mobilePane, setMobilePane] = useState<"statement" | "editor" | "console">("statement");
+
   // Console & Runner state
   const [consoleTab, setConsoleTab] = useState<"testcase" | "result">("testcase");
   const [customInput, setCustomInput] = useState("");
@@ -217,12 +220,12 @@ int main() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm text-slate-400 font-medium">Masala yuklanmoqda...</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">Masala yuklanmoqda...</span>
           </div>
         </div>
       </div>
@@ -231,14 +234,14 @@ int main() {
 
   if (!problem) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
         <Navbar />
         <div className="flex-1 flex items-center justify-center text-center p-6">
           <div>
-            <h2 className="text-2xl font-bold text-slate-200">Masala topilmadi</h2>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Masala topilmadi</h2>
             <Link
               href="/masalalar"
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-slate-950 rounded-xl font-semibold text-sm"
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-slate-950 rounded-2xl font-semibold text-sm shadow-md"
             >
               <ChevronLeft className="w-4 h-4" /> Masalalar ro&apos;yxatiga qaytish
             </Link>
@@ -249,55 +252,96 @@ int main() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
       <Navbar />
 
       {/* Subheader / Breadcrumb Bar */}
-      <div className="border-b border-slate-800 bg-slate-900/40 px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div className="border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <Link
             href="/masalalar"
-            className="flex items-center gap-1 text-xs text-slate-400 hover:text-white transition px-2 py-1 rounded-md hover:bg-slate-800 shrink-0"
+            className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-2 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0"
           >
             <ChevronLeft className="w-4 h-4" />
             <span className="hidden xs:inline">Masalalar</span>
           </Link>
-          <span className="text-slate-600">/</span>
-          <span className="text-xs font-mono font-bold text-slate-300 truncate">
+          <span className="text-slate-300 dark:text-slate-600">/</span>
+          <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 truncate">
             #{problem.id}. {problem.title}
           </span>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 text-xs shrink-0">
           <span
-            className={`px-2 py-0.5 rounded-full font-semibold border ${
+            className={`px-2.5 py-0.5 rounded-full font-semibold border ${
               problem.difficulty === "O'rta"
-                ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
                 : problem.difficulty === "Qiyin"
-                ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20"
+                : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
             }`}
           >
             {problem.difficulty}
           </span>
-          <span className="px-2 py-0.5 rounded-full font-bold font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="px-2.5 py-0.5 rounded-full font-bold font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
             {problem.difficulty === "O'rta" ? "+20 💵" : problem.difficulty === "Qiyin" ? "+30 💵" : "+10 💵"}
           </span>
-          <span className="hidden sm:flex items-center gap-1 text-slate-400 font-mono">
-            <Clock className="w-3.5 h-3.5 text-slate-500" />
+          <span className="hidden sm:flex items-center gap-1 text-slate-500 dark:text-slate-400 font-mono">
+            <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
             {problem.timeLimit} ms
           </span>
-          <span className="hidden sm:flex items-center gap-1 text-slate-400 font-mono">
-            <HardDrive className="w-3.5 h-3.5 text-slate-500" />
+          <span className="hidden sm:flex items-center gap-1 text-slate-500 dark:text-slate-400 font-mono">
+            <HardDrive className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
             {problem.memoryLimit} MB
           </span>
+        </div>
+      </div>
+
+      {/* Mobile Segmented Pane Switcher (Visible on small screens) */}
+      <div className="lg:hidden flex items-center justify-between p-2 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-1 w-full bg-slate-200/80 dark:bg-slate-950 p-1 rounded-2xl">
+          <button
+            onClick={() => setMobilePane("statement")}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+              mobilePane === "statement"
+                ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+            }`}
+          >
+            <FileCode2 className="w-3.5 h-3.5" />
+            <span>Shart</span>
+          </button>
+          <button
+            onClick={() => setMobilePane("editor")}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+              mobilePane === "editor"
+                ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+            }`}
+          >
+            <Play className="w-3.5 h-3.5" />
+            <span>Kod</span>
+          </button>
+          <button
+            onClick={() => setMobilePane("console")}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+              mobilePane === "console"
+                ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900"
+            }`}
+          >
+            <Terminal className="w-3.5 h-3.5" />
+            <span>Terminal</span>
+          </button>
         </div>
       </div>
 
       {/* Main Split Layout */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden">
         {/* LEFT COLUMN: Problem Statement & Submissions */}
-        <div className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-slate-800 flex flex-col h-auto max-h-[500px] lg:max-h-none lg:h-[calc(100vh-105px)] overflow-y-auto bg-slate-950/60">
+        <div className={`lg:col-span-5 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex flex-col h-auto lg:h-[calc(100vh-105px)] overflow-y-auto bg-slate-50/50 dark:bg-slate-950/60 ${
+          mobilePane !== "statement" ? "hidden lg:flex" : "flex"
+        }`}>
           {/* Tabs */}
           <div className="flex items-center border-b border-slate-800 bg-slate-900/60 px-4 pt-2 gap-2 sticky top-0 z-10 backdrop-blur-md">
             <button
@@ -508,9 +552,13 @@ int main() {
         </div>
 
         {/* RIGHT COLUMN: Code Editor, Console & Actions */}
-        <div className="lg:col-span-7 flex flex-col h-auto lg:h-[calc(100vh-105px)] overflow-hidden bg-slate-950">
+        <div className={`lg:col-span-7 flex flex-col h-auto lg:h-[calc(100vh-105px)] overflow-hidden bg-slate-100/50 dark:bg-slate-950 ${
+          mobilePane === "statement" ? "hidden lg:flex" : "flex"
+        }`}>
           {/* Top Half: Code Editor */}
-          <div className="flex-1 p-3 pb-1 min-h-[350px]">
+          <div className={`flex-1 p-3 pb-1 min-h-[350px] ${
+            mobilePane === "console" ? "hidden lg:block" : "block"
+          }`}>
             <CodeEditor
               value={code}
               onChange={setCode}
@@ -519,7 +567,9 @@ int main() {
           </div>
 
           {/* Bottom Half: Test Case & Console Panel */}
-          <div className="h-64 p-3 pt-1 flex flex-col">
+          <div className={`p-3 pt-1 flex flex-col ${
+            mobilePane === "console" ? "flex-1 min-h-[350px]" : "h-64"
+          } ${mobilePane === "editor" ? "hidden lg:flex" : "flex"}`}>
             <div className="flex-1 bg-slate-900 rounded-xl border border-slate-800 flex flex-col overflow-hidden shadow-xl">
               {/* Console Tabs */}
               <div className="flex items-center justify-between px-3 py-2 bg-slate-950 border-b border-slate-800">
